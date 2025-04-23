@@ -111,7 +111,7 @@
             var linedone = "{{ asset('assets/svg/Line-done.svg') }}";
             var linebefore = "{{ asset('assets/svg/Line-undone.svg') }}";
             var doneProgressIcon1 = "{{ asset('assets/svg/done-progress-icon.svg') }}";
-            var doneProgressIcon2 = "{{ asset('assets/svg/done-progress-icon 2.svg') }}";
+            var doneProgressIcon2 = "{{ asset('assets/svg/done-progress-icon-2.svg') }}";
             var doneProgressIcon3 = "{{ asset('assets/svg/done-progress-icon 3.svg') }}";
             var beforeProgressIcon2 = "{{ asset('assets/svg/before-progress-icon-2.svg') }}";
             var beforeProgressIcon3 = "{{ asset('assets/svg/before-progress-icon-3.svg') }}";

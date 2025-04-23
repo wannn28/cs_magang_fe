@@ -1,4 +1,3 @@
-// general.js
 function showLoading() {
     const loading = document.getElementById('global-loading');
     if (loading) loading.classList.remove('hidden');
@@ -11,9 +10,9 @@ function hideLoading() {
 
 async function AwaitFetchApi(url, method, data, skipAuth = false) {
     const token = localStorage.getItem('token');
-
+    const BASE_URL = window.API_BASE_URL 
     if (!skipAuth && !token) {
-        console.warn("Token tidak ditemukan di localStorage.");
+        print.warn("Token tidak ditemukan di localStorage.");
         return Promise.resolve({ message: 'Token tidak ditemukan' });
     }
 
@@ -47,16 +46,16 @@ async function AwaitFetchApi(url, method, data, skipAuth = false) {
     }, 10000);
 
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/' + url, options);
+        const response = await fetch(BASE_URL + url, options);
         clearTimeout(timeout);
         if (timeoutReached) return { message: 'Timeout' };
         hideLoading();
 
         const result = await response.json();
-
+        print.log("Fetch result:", result);
         if (!response.ok) {
             if (response.status === 401 && !skipAuth) {
-                console.error('Unauthenticated. Redirecting to login...');
+                print.error('Unauthenticated. Redirecting to login...');
                 window.location.href = '/login';
             }
         }
@@ -68,7 +67,7 @@ async function AwaitFetchApi(url, method, data, skipAuth = false) {
         if (!timeoutReached) {
             showNotification("Terjadi kesalahan jaringan", "error");
         }
-        console.error("Fetch error:", error);
+        print.error("Fetch error:", error);
         return { message: 'Fetch failed', error };
     }
 }
@@ -94,19 +93,7 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-// Optional: debug
-function print(...args) {
-    console.log(...args);
-}
-
-function printError(...args) {
-    console.error(...args);
-}
-
-// Ekspos ke window biar bisa dipakai global
-window.print = print;
-window.printError = printError;
-window.AwaitFetchApi = AwaitFetchApi;
-window.showNotification = showNotification;
-window.showLoading = showLoading;
-window.hideLoading = hideLoading;
+// window.AwaitFetchApi = AwaitFetchApi;
+// window.showNotification = showNotification;
+// window.showLoading = showLoading;
+// window.hideLoading = hideLoading;

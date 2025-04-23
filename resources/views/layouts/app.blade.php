@@ -8,8 +8,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <meta name="csrf-token" content="{{ csrf_token() }}">   
-    {{-- @vite(['resources/css/app.css', 'resources/css/navbar.css', 'resources/js/app.js']) --}}
+    <script src="{{ asset('js/logger.js') }}" defer></script>
+    <script>
+        window.APP_DEBUG_VIEW = "{{ env('APP_DEBUG_VIEW', false) ? 'true' : 'false' }}";
+        window.API_BASE_URL = '{{ config('app.api_url') }}';
+    </script>
 </head>
 @section('header')
     @include('components.header')
@@ -28,8 +31,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <!-- Global Loading Spinner -->
-    <div id="global-loading"
-        class="fixed inset-0 z-[9999] bg-white flex items-center justify-center hidden">
+    <div id="global-loading" class="fixed inset-0 z-[9999] bg-white flex items-center justify-center hidden">
         <div class="w-12 h-12 border-6 border-t-transparent border-[#51C2FF] rounded-full animate-spin"></div>
     </div>
     @stack('scripts')

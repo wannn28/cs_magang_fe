@@ -8,9 +8,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    {{-- @vite(['resources/css/app.css', 'resources/css/navbar.css', 'resources/js/app.js']) --}}
+    <script src="{{ asset('js/logger.js') }}" defer></script>
+    <script>
+        window.APP_DEBUG_VIEW = "{{ env('APP_DEBUG_VIEW', false) ? 'true' : 'false' }}";
+        window.API_BASE_URL = '{{ config('app.api_url') }}';
+    </script>
 </head>
 @section('header')
     @include('components.header')

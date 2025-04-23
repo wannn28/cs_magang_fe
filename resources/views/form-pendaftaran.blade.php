@@ -91,29 +91,26 @@
                     const response = AwaitFetchApi('user/peserta/form-peserta', 'PUT', payload);
                     const result = await response;
 
-                    console.log('API Result:', result);
+                    print.log('API Result:', result);
 
                     // Jika ada error dari API
                     if (result.errors) {
-                        // Gabungkan semua pesan error ke satu string, lalu tampilkan dengan alert
                         let errorMessages = '';
                         for (let field in result.errors) {
                             if (Array.isArray(result.errors[field])) {
                                 errorMessages += result.errors[field].join(', ') + '\n';
                             }
                         }
-                        alert(errorMessages);
+                        showNotification(errorMessages, "error");
                         return;
                     }
-
-                    // Jika berhasil (tidak ada errors)
-                    alert('Data berhasil dikirim!');
+                    showNotification("Formulir berhasil dikirim!", "success");
                     // Contoh redirect setelah sukses
                     window.location.href = '/data-siswa';
 
                 } catch (error) {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan saat mengirim data. Periksa koneksi atau hubungi admin.');
+                    print.error('Error:', error);
+                    showNotification("Terjadi kesalahan saat mengirim data. Periksa koneksi atau hubungi admin.", "error");
                 }
             });
         });
