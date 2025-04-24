@@ -123,50 +123,46 @@
     </button>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async function () {
+        document.addEventListener('DOMContentLoaded', async function() {
             // Ambil data peserta
             const pesertaRes = await AwaitFetchApi('user/peserta', 'GET', null);
             const pesertaData = pesertaRes.data;
-    
+
             // Tampilkan data peserta ke elemen HTML
             document.getElementById('nisn').textContent = pesertaData.nisn ?? '';
             document.getElementById('nama').textContent = pesertaData.nama ?? '';
-            document.getElementById('tempat-tanggal-lahir').textContent = `${pesertaData.tempat_lahir ?? ''}, ${pesertaData.tanggal_lahir ?? ''}`;
+            document.getElementById('tempat-tanggal-lahir').textContent =
+                `${pesertaData.tempat_lahir ?? ''}, ${pesertaData.tanggal_lahir ?? ''}`;
             document.getElementById('no-telp').textContent = pesertaData.no_telp ?? '';
             document.getElementById('jenis_kelamin').textContent = pesertaData.jenis_kelamin ?? '';
             document.getElementById('jenjang').textContent = pesertaData.jenjang_sekolah ?? '';
             document.getElementById('nama-ayah').textContent = pesertaData.biodata_ortu?.nama_ayah ?? '';
             document.getElementById('nama-ibu').textContent = pesertaData.biodata_ortu?.nama_ibu ?? '';
-            document.getElementById('penghasilan-ayah').textContent = pesertaData.biodata_ortu?.penghasilan_ayah ?? '';
+            document.getElementById('penghasilan-ayah').textContent = pesertaData.biodata_ortu
+                ?.penghasilan_ayah ?? '';
             document.getElementById('alamat').textContent = pesertaData.alamat ?? '';
-    
-            // Ambil data ketentuan berkas
-            const berkasRes = await AwaitFetchApi('user/berkas', 'GET', null);
-            const ketentuanBerkas = berkasRes.data;
-    
-            // Ambil data file peserta (jika disimpan di entitas seperti `pesertaData.berkas`)
+
+            // Ambil data berkas dari pesertaData
             const berkasPeserta = pesertaData.berkas ?? [];
-    
+
             const container = document.getElementById('info-display');
             const header = document.createElement('div');
             header.classList.add('font-medium');
             header.innerText = 'Berkas Siswa';
             container.appendChild(header);
-    
-            ketentuanBerkas.forEach(ket => {
-                console.log(ket);
-                const file = berkasPeserta.find(b => b.ketentuan_berkas_id === ket.id);
-                const fileName = file?.nama_file ?? 'Belum diunggah';
-                const fileUrl = file?.url ?? null; // jika ada url preview
-    
+
+            berkasPeserta.forEach(berkas => {
                 const wrapper = document.createElement('div');
-                wrapper.className = 'text-sm font-medium flex flex-col pl-2 pr-2 pb-2 border-b border-gray-400';
-    
+                wrapper.className =
+                    'text-sm font-medium flex flex-col pl-2 pr-2 pb-2 border-b border-gray-400';
+
                 wrapper.innerHTML = `
-                    <span>${ket.nama.replace(/_/g, ' ')}</span>
-                    <span class="font-light text-xs">${fileUrl ? `<a href="${fileUrl}" target="_blank">${fileName}</a>` : fileName}</span>
-                `;
-    
+        <span>${berkas.nama_file.replace(/_/g, ' ')}</span>
+        <span class="font-light text-xs">
+            <a href="${berkas.url_file}" target="_blank">${berkas.nama_file}.png</a>
+        </span>
+    `;
+
                 container.appendChild(wrapper);
             });
         });

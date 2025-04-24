@@ -34,8 +34,7 @@
                 localStorage.setItem('token', response.data.token);
                 showNotification("Login berhasil!", "success", true); // notifikasi tersimpan
                 window.location.href = '/home';
-            } else {
-                showNotification(response.message || "Login gagal. Periksa nomor HP Anda.", "error");
+            
             }
         });
     });

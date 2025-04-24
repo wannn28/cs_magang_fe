@@ -43,7 +43,7 @@ async function AwaitFetchApi(url, method, data, skipAuth = false) {
         timeoutReached = true;
         hideLoading();
         showNotification("Permintaan melebihi waktu tunggu. Silakan coba lagi.", "error");
-    }, 10000);
+    }, 30000);
 
     try {
         const response = await fetch(BASE_URL + url, options);
@@ -53,6 +53,9 @@ async function AwaitFetchApi(url, method, data, skipAuth = false) {
 
         const result = await response.json();
         print.log("Fetch result:", result);
+        if (result.meta?.message) {
+            showNotification(result.meta.message, response.ok ? 'success' : 'error');
+        }
         if (!response.ok) {
             if (response.status === 401 && !skipAuth) {
                 print.error('Unauthenticated. Redirecting to login...');

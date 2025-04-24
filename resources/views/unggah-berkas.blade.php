@@ -55,7 +55,6 @@
             e.preventDefault();
 
             const formData = new FormData();
-
             const fileInputs = document.querySelectorAll('input[type="file"]');
             let hasFile = false;
 
@@ -67,39 +66,18 @@
                 }
             });
 
-
             if (!hasFile) {
                 showNotification("Silakan pilih minimal satu file untuk diunggah.", "error");
                 return;
             }
 
-            try {
-                const token = localStorage.getItem('token'); // jika butuh auth
-                for (let pair of formData.entries()) {
-                    console.log(pair[0], pair[1]);
-                }
-                const response = await fetch('http://localhost:8000/api/user/berkas/upload', {
-                    method: 'POST',
-                    headers: {
-                        // hanya tambahkan ini jika TIDAK pakai FormData
-                        // 'Content-Type': 'multipart/form-data',
-                        ...(token ? {
-                            'Authorization': `Bearer ${token}`
-                        } : {})
-                    },
-                    body: formData
-                });
-                console.log(response)
-                const data = await response.json();
-                if (response.ok && data.meta?.code === 200) {
-                    showNotification("Berkas berhasil diunggah!", "success");
-                    location.reload();
-                } else {
-                    showNotification(data.meta?.message || "Gagal mengunggah: Terjadi kesalahan.", "error");
-                }
-            } catch (err) {
-                console.error(err);
-                showNotification("Terjadi kesalahan saat mengirim data.", "error");
+            const response = await AwaitFetchApi('user/berkas/upload', 'POST', formData);
+
+            if (response.meta?.code === 200) {
+                showNotification("Berkas berhasil diunggah!", "success");
+                location.reload();
+            } else {
+                showNotification(response.meta?.message || "Gagal mengunggah: Terjadi kesalahan.", "error");
             }
         });
     </script>
