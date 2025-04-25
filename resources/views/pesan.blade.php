@@ -40,7 +40,7 @@
                 container.innerHTML = `<div class="text-center text-gray-500 text-sm">Tidak ada pesan.</div>`;
             }
         }).catch(error => {
-            console.error("Gagal mengambil pesan:", error);
+            print.error("Gagal mengambil pesan:", error);
         });
     });
 </script>

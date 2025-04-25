@@ -119,7 +119,7 @@
             // Panggil API untuk mendapatkan data peserta dan progress
             AwaitFetchApi('user/home', 'GET', null)
                 .then((res) => {
-                    console.log(res);
+                    print.log(res);
                     if (res && res.data) {
                         // Update data peserta
                         const peserta = res.data.peserta;
@@ -183,7 +183,7 @@
                     }
                 })
                 .catch((error) => {
-                    console.error('Error fetching peserta:', error);
+                    print.error('Error fetching peserta:', error);
                 });
         });
     </script>

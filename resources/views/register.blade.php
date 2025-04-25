@@ -41,13 +41,13 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const daftarBtn = document.getElementById('btn-daftar');
-     // Tampilkan modal QRIS
-    showQRModal('https://payment-link.com'); 
+            // Tampilkan modal QRIS
             daftarBtn.addEventListener('click', async () => {
                 const nama = document.getElementById('nama').value.trim();
                 const no_telp = document.getElementById('no_telp').value.trim();
                 const jenis_kelamin = document.getElementById('jenis_kelamin').value;
                 const jenjang_sekolah = document.getElementById('jenjang_sekolah').value;
+               
 
                 if (!nama || !no_telp) {
                     showNotification("Nama dan nomor HP wajib diisi!", "error");
@@ -62,16 +62,18 @@
                 };
 
                 const response = await AwaitFetchApi('auth/register', 'POST', data, true);
-
-                if (response.meta?.code === 201) {
-                    showNotification("Registrasi berhasil!", "success",
-                    true); // tampil di halaman login
-                    setTimeout(() => {
-                        window.location.href = '/login';
-                    }, 1500);
-                } else {
-                    showNotification(response.message || "Registrasi gagal", "error");
+                 // showQRModal('https://payment-link.com');
+                 if (response.meta?.code === 201) {
+                    showNotification("Registrasi berhasil!, Silahkan lakukan pembayaran", "success");
+                    showQRModal(response.data.qr_data);  // Tampilkan modal QR
                 }
+                // if (response.meta?.code === 201) {
+                //     showNotification("Registrasi berhasil!", "success",
+                //         true); // tampil di halaman login
+                //     setTimeout(() => {
+                //         window.location.href = '/login';
+                //     }, 1500);
+                // }
             });
         });
     </script>

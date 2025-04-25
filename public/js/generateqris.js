@@ -1,7 +1,7 @@
 function generateQRCode(elementId, data, options = {}) {
     // Default options
     const defaultOptions = {
-        size: 200,
+        size: 300,
         level: 'H', // Error correction level (L, M, Q, H)
         background: '#ffffff',
         foreground: '#000000'
@@ -22,7 +22,7 @@ function generateQRCode(elementId, data, options = {}) {
     // Get canvas element
     const canvas = document.getElementById(elementId);
     if (!canvas) {
-        console.error('Element with ID ' + elementId + ' not found');
+        print.error('Element with ID ' + elementId + ' not found');
         return;
     }
 
@@ -103,7 +103,7 @@ async function checkPaymentStatus() {
             alert('Pembayaran belum diterima');
         }
     } catch (error) {
-        console.error('Error:', error);
+        print.error('Error:', error);
         alert('Gagal memeriksa status pembayaran');
     }
 }

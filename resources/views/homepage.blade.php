@@ -20,7 +20,7 @@
 
             // Ambil gambar jika tersedia
             if (res.meta?.code === 200 && Array.isArray(res.data?.data) && res.data.data.length > 0) {
-                imageUrls = res.data.data;
+                imageUrls = res.data.data.map(item => item.url || item); // Ambil properti 'url' jika ada
             } else {
                 // Fallback
                 imageUrls = ['assets/img/berita.png'];

@@ -39,13 +39,13 @@
             AwaitFetchApi('user/home', 'GET', null)
                 .then(response => {
                     const data = response.data.peserta;
-                    console.log(response.data)
+                    print.log(response.data)
                     document.getElementById('nama').textContent = data.nama;
                     document.getElementById('nisn').textContent = data.nisn;
                     // document.getElementById('profile-img').src = data.foto;
                 })
                 .catch(error => {
-                    console.error('Error fetching data:', error);
+                    print.error('Error fetching data:', error);
                 });
         });
     </script>

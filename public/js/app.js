@@ -53,13 +53,30 @@ async function AwaitFetchApi(url, method, data, skipAuth = false) {
 
         const result = await response.json();
         print.log("Fetch result:", result);
-        if (result.meta?.message) {
+        
+        // Tambahkan kondisi pengecekan method
+        if (['POST', 'PUT'].includes(method) && result.meta?.message) {
             showNotification(result.meta.message, response.ok ? 'success' : 'error');
         }
+
         if (!response.ok) {
-            if (response.status === 401 && !skipAuth) {
+            if (response.status === 422 && result.errors) {
+                const allErrors = Object.values(result.errors)
+                    .flat()
+                    .join('<br>');
+                
+                // Tampilkan error hanya untuk POST/PUT
+                if (['POST', 'PUT'].includes(method)) {
+                    showNotification(allErrors, 'error');
+                }
+            } else if (response.status === 401 && !skipAuth) {
                 print.error('Unauthenticated. Redirecting to login...');
+                if (['POST', 'PUT'].includes(method)) {
+                    showNotification("Sesi Anda telah berakhir. Silakan login kembali.", "error");
+                }
                 window.location.href = '/login';
+            } else if (result.meta?.message && ['POST', 'PUT'].includes(method)) {
+                showNotification(result.meta.message, 'error');
             }
         }
 
@@ -67,7 +84,7 @@ async function AwaitFetchApi(url, method, data, skipAuth = false) {
     } catch (error) {
         clearTimeout(timeout);
         hideLoading();
-        if (!timeoutReached) {
+        if (!timeoutReached && ['POST', 'PUT'].includes(method)) {
             showNotification("Terjadi kesalahan jaringan", "error");
         }
         print.error("Fetch error:", error);
@@ -76,27 +93,33 @@ async function AwaitFetchApi(url, method, data, skipAuth = false) {
 }
 
 function showNotification(message, type = 'success') {
-    const notif = document.createElement('div');
-    notif.className = `fixed top-5 left-1/2 transform -translate-x-1/2 z-50 
-        px-6 py-3 rounded-xl text-white text-sm shadow-lg transition-opacity duration-300 
-        ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
-
-    notif.style.opacity = '0';
-    notif.innerText = message;
-
-    document.body.appendChild(notif);
-
-    setTimeout(() => {
-        notif.style.opacity = '1';
-    }, 10);
-
-    setTimeout(() => {
-        notif.style.opacity = '0';
-        setTimeout(() => notif.remove(), 300);
-    }, 3000);
+    Swal.fire({
+        icon: type,
+        title: message,
+        toast: true,
+        position: 'top',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        customClass: {
+            popup: 'custom-swal',
+            title: 'text-sm'
+        },
+        width: '300px',
+        padding: '0.5rem',
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
 }
 
-// window.AwaitFetchApi = AwaitFetchApi;
-// window.showNotification = showNotification;
-// window.showLoading = showLoading;
-// window.hideLoading = hideLoading;
+// Hapus event listener DOMContentLoaded untuk notifikasi
+document.addEventListener('DOMContentLoaded', () => {
+    const pendingNotification = localStorage.getItem('pendingNotification');
+    if (pendingNotification) {
+        const { message, type } = JSON.parse(pendingNotification);
+        showNotification(message, type);
+    }
+});
+
